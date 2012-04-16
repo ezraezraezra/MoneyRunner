@@ -1,0 +1,17 @@
+/**********************************************************************
+ * Developer:   Ezra Velazquez http://ezraezraezra.com
+ * 
+ * Date:        April 2012
+ *
+ * Title:       MoneyRunner         
+ * Description: Big screen game using cellphones as controllers
+ *
+ * Tech:        JavaScript, jQuery, MySQL, Node.js, Socket.io
+ * Last Update: April 16th, 2012
+ ***********************************************************************/
+ 
+ NOTE: *** 3rd PARTY LIBRARIES HAVE BEEN OMITTED FROM THE PUBLIC REPO ***
+ 
+ Libraries Omitted:  jQuery          http://www.jquery.com
+                     Node.js         http://nodejs.org/
+                     Socket.io       http://socket.io
