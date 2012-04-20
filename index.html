@@ -18,21 +18,130 @@ ___  ___                      ______
 		<script type="text/javascript" src="js/lib/jquery-1.5.1.min.js"></script>
 		<script type="text/javascript" src="js/listener.js"></script>
 		<script type="text/javascript" src="js/game_canvas.js"></script>
+		<script type="text/javascript" src="js/player_info.js"></script>
 		<style type="text/css">
 			body {
 				width: 100%;
 				height: 100%;
+				background-color: #030303;
+				margin: 0;
+				padding: 0;
 			}
-			#contianer {
+			#container {
 				width: 100%;
 				height: 100%;
+				text-align: center;
 			}
+			#canvas_main {
+				outline: none;
+				position: relative;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			@font-face {
+				font-family: "Minotaur";
+				src: url("assets/minotaur.ttf");
+			}
+			.container_top {
+				margin-top: 10px;
+				margin-bottom: 5px;
+				text-align: center;
+			}
+			.game_title {
+				display: block;
+				font-size: 96px;
+				color: #FFF249;
+				font-family: "Minotaur";
+			}
+			.game_title_instruction {
+				display: block;
+				font-size: 24px;
+				color: #009EFF;
+				font-family: "Minotaur";
+			}
+			#canvas_secondary {
+				outline: none;
+				position: relative;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#player_info {
+				font-family: "Minotaur";
+				width: 996px;
+				margin-left: auto;
+				margin-right: auto;
+				margin-top: 10px;
+				border: 2px solid #E80C7A;
+			}
+			.player_info_left_title {
+				color: #009EFF;
+				font-size: 36px;
+			}
+			.player_info_top {
+				float: left;
+				padding : 20px;
+				padding-bottom: 0px;
+			}
+			.clear_box {
+				clear: both;
+			}
+			.player_info_bottom {
+				width: 956px;
+				float: right;
+				padding: 20px;
+				padding-top: 10px;
+			}
+			.player_info_cell {
+				border: 2px solid #E80C7A;
+				width: 225px;
+				margin: 5px;
+				float: left;
+			}
+			.player_info_graphic {
+				background-color: green;
+				background-image: url("assets/player.png");
+				width: 40px;
+				height: 40px;
+				float: left;
+				margin-left: 10px;
+				margin-top: 5px;
+			}
+			.player_info_number {
+				color: #68FF48;
+				float: left;
+				width: 60px;
+				line-height: 50px;
+				font-size: 24px;
+				padding-left: 5px;
+			}
+			.player_info_score {
+				color: #68FF48;
+				float: right;
+				width: 80px;
+				text-align: right;
+				padding-right: 5px;
+				font-size: 24px;
+				line-height: 50px;
+			}
+			
+			
 		</style>
 	</head>
 	<body>
-		<h1>New Web Project Page</h1>
 		<div id="container">
+			<div class="container_top">
+				<span class="game_title">moneyRunner</span>
+				<span class="game_title_instruction">dial: 1.206.456.1465 to play</span>
+			</div>
 			<canvas id="canvas_main" width="200" height="200"></canvas>
+			<div id="player_info">
+				<div class="player_info_top">
+					<span class="player_info_left_title">players</span>
+				</div>
+				<div class="player_info_bottom">
+				</div>
+				<div class="clear_box"></div>
+			</div>
 		</div>
 	</body>
 </html>

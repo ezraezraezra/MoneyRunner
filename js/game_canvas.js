@@ -6,11 +6,12 @@ var GAME_CANVAS = function() {
 	var p;
 	var spacing_x = 50;
 	var spacing_y = 50;
+	var img;
 	
 	function brick(y,x) {
 		this.x = x;
 		this.y = y;
-		this.color = [223,12,122];
+		this.color = [232,12,122];
 		this.width = 50;
 		this.height = 50;
 	}
@@ -18,22 +19,25 @@ var GAME_CANVAS = function() {
 	function coin(y,x) {
 		this.x = x;
 		this.y = y;
-		this.color_on = [50,255,50];
-		this.color_off = [0,0,0];
-		this.width = 25;
-		this.height = 25;
+		this.color_on = [255,242,73];
+		this.color_off = [3,3,3];
+		this.width = 15;
+		this.height = 15;
 		this.available = true;
 		this.flag = false;
 	}
 	
-	function player(y,x) {
+	function player(y,x, phone_number, color) {
 		this.x = x;
 		this.y = y;
-		this.color_on = [200,0,200];
+		this.color_on = color;
 		this.color_off = [200,200,200];
 		this.width = 40;
 		this.height = 40;
-		this.display_number = 99;
+		this.phone_number = phone_number;
+		this.id = phone_number.slice(phone_number.length - 4);
+		this.position = 'normal';
+		this.score = 0;
 	}
 	
 	var brick_array = new Array();
@@ -53,22 +57,29 @@ var GAME_CANVAS = function() {
 		processing.setup = function() {
 			processing.size(1000,550);
 			processing.colorMode(processing.RGB);
-			processing.background(22,22,22);
+			processing.background(3,3,3);
 			
 			/*
 			 * START TESTING ONLY
 			 */
-			player_array.push(new player(5,9));
+			player_array.push(new player(5,9,"19498423052", [0,128,0]));
+			PLAYER_INFO.addPlayer("19498423052",[0,128,0]);
 			/*
 			 * END TESTING ONLY
 			 */
+			img = new Array();
+			img['normal'] = processing.loadImage("assets/player.png");
+			img['right'] = processing.loadImage("assets/player_right.png");
+			img['left'] = processing.loadImage("assets/player_left.png");
+			img['down'] = processing.loadImage("assets/player_down.png");
+			img['up'] = processing.loadImage("assets/player_up.png");
 			
 			layout[0]  = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 			layout[1]  = new Array(0,8,8,8,8,0,8,8,8,8,8,8,8,8,0,8,8,8,8,0);
 			layout[2]  = new Array(0,8,0,0,8,0,8,0,0,0,0,0,0,8,0,8,0,0,8,0);
 			layout[3]  = new Array(0,8,0,8,8,8,8,8,8,8,8,8,8,8,8,8,8,0,8,0);
 			layout[4]  = new Array(0,8,0,8,0,0,8,0,0,9,9,0,0,8,0,0,8,0,8,0);
-			layout[5]  = new Array(0,8,8,8,8,8,8,0,9,9,9,9,0,8,8,8,8,8,8,0);
+			layout[5]  = new Array(8,8,8,8,8,8,8,0,9,9,9,9,0,8,8,8,8,8,8,8);
 			layout[6]  = new Array(0,8,0,8,0,0,8,0,0,0,0,0,0,8,0,0,8,0,8,0);
 			layout[7]  = new Array(0,8,0,8,8,8,8,8,8,8,8,8,8,8,8,8,8,0,8,0);
 			layout[8]  = new Array(0,8,0,0,8,0,8,0,0,0,0,0,0,8,0,8,0,0,8,0);
@@ -93,7 +104,7 @@ var GAME_CANVAS = function() {
 		   
 		// Override draw function, by default it will be called 60 times per second  
 		processing.draw = function() {  
-		    processing.background(22,22,22);
+		    processing.background(3,3,3);
 		    drawWalls();
 		    drawCoins();
 		    drawPlayers();
@@ -105,6 +116,10 @@ var GAME_CANVAS = function() {
 		    		for(var ci = 0; ci < coin_array.length; ci++) {
 		    			if(player_array[pi].x == coin_array[ci].x && player_array[pi].y == coin_array[ci].y) {
 		    				if(coin_array[ci].available == true && coin_array[ci].flag == false) {
+		    					
+		    					player_array[pi].score += 1;
+		    					PLAYER_INFO.updateScore(player_array[pi].score, player_array[pi].id);
+		    					
 		    					coin_array[ci].flag = true;
 		    					coin_array[ci].available = false;
 		    					//start counter to reactivate marker;
@@ -144,7 +159,7 @@ var GAME_CANVAS = function() {
 		    			processing.fill(coin_array[index].color_off[0],coin_array[index].color_off[1],coin_array[index].color_off[2]);
 		    		}
 		    		processing.pushMatrix();
-		    			processing.translate(coin_array[index].width,coin_array[index].height);
+		    			processing.translate(coin_array[index].width + 10,coin_array[index].height + 10);
 		    			processing.ellipse(coin_array[index].x * spacing_x, coin_array[index].y * spacing_y, coin_array[index].width, coin_array[index].height);
 		    		processing.popMatrix();
 		    	}
@@ -153,10 +168,13 @@ var GAME_CANVAS = function() {
 		    function drawPlayers() {
 		    	for(var index = 0; index < player_array.length; index++) {
 		    		processing.noStroke();
-		    		processing.fill(100,0,100);
+		    		processing.fill(player_array[index].color_on[0],player_array[index].color_on[1],player_array[index].color_on[2]);
 		    		processing.pushMatrix();
 		    			processing.translate(5,5);
 		    			processing.rect(player_array[index].x*spacing_x, player_array[index].y*spacing_y, 40,40);
+		    			processing.image(img[player_array[index].position],player_array[index].x*spacing_x, player_array[index].y*spacing_y );
+		    			//
+		    			
 		    		processing.popMatrix();
 		    		
 		    	}
@@ -179,21 +197,34 @@ var GAME_CANVAS = function() {
 				case "up":
 					if(typeof layout[player_y - 1][player_x] != 'undefined' & layout[player_y - 1][player_x] != 0) {
 						player_array[0].y -= 1;
+						player_array[0].position = 'up';
 					}
 					break;
 				case "down":
 					if(typeof layout[player_y + 1][player_x] != 'undefined' & layout[player_y + 1][player_x] != 0) {
 						player_array[0].y += 1;
+						player_array[0].position = 'down';
 					}
 					break;
 				case "left":
 					if(typeof layout[player_y][player_x - 1] != 'undefined' & layout[player_y][player_x - 1] != 0) {
 						player_array[0].x -= 1;
+						console.log(player_array[0].x);
+						player_array[0].position = 'left';
+					}
+					else if(typeof layout[player_y][player_x - 1] == 'undefined') {
+						player_array[0].x = 19;
+						player_array[0].position = 'left';
 					}
 					break;
 				case "right":
 					if(typeof layout[player_y][player_x + 1] != 'undefined' & layout[player_y][player_x + 1] != 0) {
 						player_array[0].x += 1;
+						player_array[0].position = 'right';
+					}
+					else if(typeof layout[player_y][player_x + 1] == 'undefined') {
+						player_array[0].x = 0;
+						player_array[0].position = 'right';
 					}
 					break;
 				default:
