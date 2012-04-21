@@ -29,6 +29,18 @@ var GAME_CANVAS = function() {
 		this.flag = false;
 	}
 	
+	function specialObj(y,x) {
+		this.x = x;
+		this.y = y;
+		this.color_on = [255,242,73];
+		this.color_off = [3,3,3];
+		this.width = 30;
+		this.height = 30;
+		this.available = true;
+		this.flag = false;
+		this.special = 'double_score';
+	}
+	
 	function player(y,x, phone_number, color) {
 		this.x = x;
 		this.y = y;
@@ -44,6 +56,7 @@ var GAME_CANVAS = function() {
 	
 	var brick_array = new Array();
 	var coin_array = new Array();
+	var specialObj_array = new Array();
 	var player_array = new Array();
 	var layout = new Array();
 	
@@ -80,7 +93,7 @@ var GAME_CANVAS = function() {
 			img['up'] = processing.loadImage("assets/player_up.png");
 			
 			layout[0]  = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-			layout[1]  = new Array(0,8,8,8,8,0,8,8,8,8,8,8,8,8,0,8,8,8,8,0);
+			layout[1]  = new Array(0,7,8,8,8,0,8,8,8,8,8,8,8,8,0,8,8,8,8,0);
 			layout[2]  = new Array(0,8,0,0,8,0,8,0,0,0,0,0,0,8,0,8,0,0,8,0);
 			layout[3]  = new Array(0,8,0,8,8,8,8,8,8,8,8,8,8,8,8,8,8,0,8,0);
 			layout[4]  = new Array(0,8,0,8,0,0,8,0,0,9,9,0,0,8,0,0,8,0,8,0);
@@ -102,6 +115,9 @@ var GAME_CANVAS = function() {
 						else if(layout[y][x] == 8) {
 							coin_array.push(new coin(y,x));
 						}
+						else if(layout[y][x] == 7) {
+							specialObj_array.push(new specialObj(y,x));
+						}
 					}
 				}
 			}
@@ -112,10 +128,12 @@ var GAME_CANVAS = function() {
 		    processing.background(3,3,3);
 		    drawWalls();
 		    drawCoins();
+		    drawSpecialObjs();
 		    drawPlayers();
 		    
 		    checkPlayerCoinCollision();
 		    checkPlayerPlayerCollision();
+		    checkPlayerSpecialObjCollision();
 		    
 		    function checkPlayerCoinCollision() {
 		    	for(var pi = 0; pi < player_array.length; pi++) {
@@ -139,6 +157,37 @@ var GAME_CANVAS = function() {
 		    		setTimeout(function() {
 						coin_array[index].flag = false;
 						coin_array[index].available = true;
+					}, 5000);
+		    	}
+		    }
+		    
+		    function checkPlayerSpecialObjCollision() {
+		    	for(var pi = 0; pi < player_array.length; pi++) {
+		    		//console.log("layer 1");
+		    		for(var ci = 0; ci < specialObj_array.length; ci++) {
+		    			if(player_array[pi].x == specialObj_array[ci].x && player_array[pi].y == specialObj_array[ci].y) {
+		    				//console.log("level 3");
+		    				if(specialObj_array[ci].available == true && specialObj_array[ci].flag == false) {
+		    					//console.log("top");
+		    					player_array[pi].score = player_array[pi].score * 2;
+		    					PLAYER_INFO.updateScore(player_array[pi].score, player_array[pi].id);
+		    					
+		    					specialObj_array[ci].flag = true;
+		    					specialObj_array[ci].available = false;
+		    					console.log("here");
+		    					
+		    					//start counter to reactivate marker;
+		    					generateSpecialObj(ci);
+		    				}
+		    			}
+		    		}
+		    	}
+		    	
+		    	function generateSpecialObj(index) {
+		    		console.log("inside");
+		    		setTimeout(function() {
+						specialObj_array[index].flag = false;
+						specialObj_array[index].available = true;
 					}, 5000);
 		    	}
 		    }
@@ -197,6 +246,23 @@ var GAME_CANVAS = function() {
 		    	}
 		    }
 		    
+		    function drawSpecialObjs() {
+		    	for(var index = 0; index < specialObj_array.length; index++) {
+		    		processing.noStroke();
+		    		if(specialObj_array[index].available == true) {
+		    			processing.fill(specialObj_array[index].color_on[0],specialObj_array[index].color_on[1],specialObj_array[index].color_on[2]);
+		    		}
+		    		else {
+		    			processing.fill(specialObj_array[index].color_off[0],specialObj_array[index].color_off[1],specialObj_array[index].color_off[2]);
+		    		}
+		    		processing.pushMatrix();
+		    			processing.translate(specialObj_array[index].width - 5,specialObj_array[index].height - 5);
+		    			processing.ellipse(specialObj_array[index].x * spacing_x, specialObj_array[index].y * spacing_y, specialObj_array[index].width, specialObj_array[index].height);
+		    		processing.popMatrix();
+		    	}
+		    	
+		    }
+		    
 		    function drawPlayers() {
 		    	for(var index = 0; index < player_array.length; index++) {
 		    		processing.noStroke();
@@ -221,7 +287,14 @@ var GAME_CANVAS = function() {
 	}
 	
 	return {
-		movePlayer : function(position, player_number) {
+		movePlayer : function(position, player_phone_number) {
+			var player_number = -1;
+			for(var x = 0; x < player_array.length; x++) {
+				if(player_array[x].phone_number == player_phone_number) {
+					player_number = x;
+				} 
+			}
+			
 			var player_x = player_array[player_number].x;
 			var player_y = player_array[player_number].y;
 			

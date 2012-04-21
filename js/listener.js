@@ -12,36 +12,36 @@ var LISTENER = function() {
 			switch(position) {
 				// UP
 				case 38:
-					GAME_CANVAS.movePlayer('up',0);
+					GAME_CANVAS.movePlayer('up','19498423052');
 					break;
 				// DOWN
 				case 40:
-					GAME_CANVAS.movePlayer('down',0);
+					GAME_CANVAS.movePlayer('down','19498423052');
 					break;
 				// LEFT
 				case 37:
-					GAME_CANVAS.movePlayer('left',0);
+					GAME_CANVAS.movePlayer('left','19498423052');
 					break;
 				// RIGHT
 				case 39:
-					GAME_CANVAS.movePlayer('right',0);
+					GAME_CANVAS.movePlayer('right','19498423052');
 					break;
 				
 				// UP
 				case 87:
-					GAME_CANVAS.movePlayer('up',1);
+					GAME_CANVAS.movePlayer('up','19496359409');
 					break;
 				// DOWN
 				case 83:
-					GAME_CANVAS.movePlayer('down',1);
+					GAME_CANVAS.movePlayer('down','19496359409');
 					break;
 				// LEFT
 				case 65:
-					GAME_CANVAS.movePlayer('left',1);
+					GAME_CANVAS.movePlayer('left','19496359409');
 					break;
 				// RIGHT
 				case 68:
-					GAME_CANVAS.movePlayer('right',1);
+					GAME_CANVAS.movePlayer('right','19496359409');
 					break;
 					
 				default:
