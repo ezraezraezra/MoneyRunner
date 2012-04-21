@@ -8,6 +8,8 @@ var GAME_CANVAS = function() {
 	var spacing_y = 50;
 	var img;
 	
+	var player_colors = new Array([122,155,168], [255,255,255], [190,250,33], [247,64,28], [53,119,125]);
+	
 	function brick(y,x) {
 		this.x = x;
 		this.y = y;
@@ -62,8 +64,11 @@ var GAME_CANVAS = function() {
 			/*
 			 * START TESTING ONLY
 			 */
-			player_array.push(new player(5,9,"19498423052", [0,128,0]));
-			PLAYER_INFO.addPlayer("19498423052",[0,128,0]);
+			player_array.push(new player(5,9,"19498423052", player_colors[0]));
+			PLAYER_INFO.addPlayer("19498423052",player_colors[0]);
+			
+			player_array.push(new player(5,11,"19496359409", player_colors[1]));
+			PLAYER_INFO.addPlayer("19496359409",player_colors[1]);
 			/*
 			 * END TESTING ONLY
 			 */
@@ -110,6 +115,7 @@ var GAME_CANVAS = function() {
 		    drawPlayers();
 		    
 		    checkPlayerCoinCollision();
+		    checkPlayerPlayerCollision();
 		    
 		    function checkPlayerCoinCollision() {
 		    	for(var pi = 0; pi < player_array.length; pi++) {
@@ -134,6 +140,32 @@ var GAME_CANVAS = function() {
 						coin_array[index].flag = false;
 						coin_array[index].available = true;
 					}, 5000);
+		    	}
+		    }
+		    
+		    function checkPlayerPlayerCollision() {
+		    	for(var p1 = 0; p1 < player_array.length; p1++) {
+		    		for(var p2 = 0; p2 < player_array.length; p2++) {
+		    			// Don't detect collision with oneself
+		    			if(p1 != p2) {
+		    				if(player_array[p1].x == player_array[p2].x && player_array[p1].y == player_array[p2].y) {
+		    					if( ( (player_array[p1].x >= 8 && player_array[p1].x <=11) && (player_array[p1].y == 5) ) ||  (player_array[p1].x == 9 || player_array[p1].x == 10) && (player_array[p1].y == 4) ) {
+		    						// Player in safety zone
+		    					}
+		    					else {
+		    						// Share each other's coins
+		    						var p1_score = player_array[p1].score;
+		    						var p2_score = player_array[p2].score;
+		    						var new_score = Math.floor((p1_score + p2_score) / 2);
+		    						player_array[p1].score = new_score;
+		    						player_array[p2].score = new_score;
+		    						PLAYER_INFO.updateScore(player_array[p1].score, player_array[p1].id);
+		    						PLAYER_INFO.updateScore(player_array[p2].score, player_array[p2].id);
+		    					}
+		    				}
+		    			}
+		    			
+		    		}
 		    	}
 		    }
 		    
@@ -189,42 +221,41 @@ var GAME_CANVAS = function() {
 	}
 	
 	return {
-		movePlayer : function(position) {
-			var player_x = player_array[0].x;
-			var player_y = player_array[0].y;
+		movePlayer : function(position, player_number) {
+			var player_x = player_array[player_number].x;
+			var player_y = player_array[player_number].y;
 			
 			switch(position) {
 				case "up":
 					if(typeof layout[player_y - 1][player_x] != 'undefined' & layout[player_y - 1][player_x] != 0) {
-						player_array[0].y -= 1;
-						player_array[0].position = 'up';
+						player_array[player_number].y -= 1;
+						player_array[player_number].position = 'up';
 					}
 					break;
 				case "down":
 					if(typeof layout[player_y + 1][player_x] != 'undefined' & layout[player_y + 1][player_x] != 0) {
-						player_array[0].y += 1;
-						player_array[0].position = 'down';
+						player_array[player_number].y += 1;
+						player_array[player_number].position = 'down';
 					}
 					break;
 				case "left":
 					if(typeof layout[player_y][player_x - 1] != 'undefined' & layout[player_y][player_x - 1] != 0) {
-						player_array[0].x -= 1;
-						console.log(player_array[0].x);
-						player_array[0].position = 'left';
+						player_array[player_number].x -= 1;
+						player_array[player_number].position = 'left';
 					}
 					else if(typeof layout[player_y][player_x - 1] == 'undefined') {
-						player_array[0].x = 19;
-						player_array[0].position = 'left';
+						player_array[player_number].x = 19;
+						player_array[player_number].position = 'left';
 					}
 					break;
 				case "right":
 					if(typeof layout[player_y][player_x + 1] != 'undefined' & layout[player_y][player_x + 1] != 0) {
-						player_array[0].x += 1;
-						player_array[0].position = 'right';
+						player_array[player_number].x += 1;
+						player_array[player_number].position = 'right';
 					}
 					else if(typeof layout[player_y][player_x + 1] == 'undefined') {
-						player_array[0].x = 0;
-						player_array[0].position = 'right';
+						player_array[player_number].x = 0;
+						player_array[player_number].position = 'right';
 					}
 					break;
 				default:

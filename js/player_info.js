@@ -12,8 +12,8 @@ var PLAYER_INFO = function() {
 	function _addPlayer(phone_number, color) {
 		$obj = $(layout);
 		$obj.attr("id", phone_number.slice(phone_number.length - 4));
+		$obj.children(":nth-child(1)").css("backgroundColor", "rgb("+color[0]+","+color[1]+","+color[2]+")");
 		$obj.children(":nth-child(2)").text("x"+ phone_number.slice(phone_number.length - 4));
-		$obj.children(":nth-child(1)").css("backgroundColor", "rgb("+color[0]+","+color[1]+","+color[2]);
 		
 		$(".player_info_bottom").append($obj);
 	}
