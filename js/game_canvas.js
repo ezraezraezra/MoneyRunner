@@ -136,17 +136,29 @@ var GAME_CANVAS = function() {
 		    					coin_array[ci].flag = true;
 		    					coin_array[ci].available = false;
 		    					//start counter to reactivate marker;
-		    					generateCoin(ci);
+		    					generateCoin(ci, 5000);
 		    				}
 		    			}
 		    		}
 		    	}
 		    	
-		    	function generateCoin(index) {
+		    	function generateCoin(index, time_out) {
 		    		setTimeout(function() {
-						coin_array[index].flag = false;
-						coin_array[index].available = true;
-					}, 5000);
+		    			var reset = true;
+		    			for(var pi = 0; pi < player_array.length; pi++) {
+		    				if(player_array[pi].x == coin_array[index].x && player_array[pi].y == coin_array[index].y) {
+		    					reset = false;
+		    				}
+		    			}
+		    			if(reset == true) {
+		    				coin_array[index].flag = false;
+							coin_array[index].available = true;
+		    			}
+		    			else {
+		    				generateCoin(index, 3000);
+		    			}
+						
+					}, time_out);
 		    	}
 		    }
 		    
@@ -158,27 +170,37 @@ var GAME_CANVAS = function() {
 		    				//console.log("level 3");
 		    				if(specialObj_array[ci].available == true && specialObj_array[ci].flag == false) {
 		    					//console.log("top");
-		    					player_array[pi].score = player_array[pi].score * 2;
+		    					player_array[pi].score = player_array[pi].score + 10;
 		    					PLAYER_INFO.updateScore(player_array[pi].score, player_array[pi].id);
 		    					
 		    					specialObj_array[ci].flag = true;
 		    					specialObj_array[ci].available = false;
-		    					console.log("here");
 		    					
 		    					//start counter to reactivate marker;
-		    					generateSpecialObj(ci);
+		    					generateSpecialObj(ci, 10000);
 		    				}
 		    			}
 		    		}
 		    	}
 		    	
-		    	function generateSpecialObj(index) {
-		    		console.log("inside");
+		    	function generateSpecialObj(index, time_out) {
 		    		setTimeout(function() {
-						specialObj_array[index].flag = false;
-						specialObj_array[index].available = true;
-					}, 5000);
+		    			var reset = true;
+		    			for(var pi = 0; pi < player_array.length; pi++) {
+		    				if(player_array[pi].x == specialObj_array[index].x && player_array[pi].y == specialObj_array[index].y) {
+		    					reset = false;
+		    				}
+		    			}
+		    			if(reset == true) {
+		    				specialObj_array[index].flag = false;
+							specialObj_array[index].available = true;
+		    			}
+		    			else {
+		    				generateSpecialObj(index, 10000);
+		    			}
+					}, time_out);
 		    	}
+		    	
 		    }
 		    
 		    function checkPlayerPlayerCollision() {

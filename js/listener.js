@@ -7,8 +7,8 @@ var LISTENER = function() {
 		var _ENV = 'test';
 		
 		if(_ENV == 'test') {
-			GAME_CANVAS.addPlayer("9498423052", 0);
-			GAME_CANVAS.addPlayer("9496359409", 1);
+			GAME_CANVAS.addPlayer("xxxxxxxxxx", 0);
+			GAME_CANVAS.addPlayer("yyyyyyyyyy", 1);
 			
 			$("#container").bind('keyup', function(e){
 				var code = e.keyCode;
