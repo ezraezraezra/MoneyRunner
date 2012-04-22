@@ -18,6 +18,10 @@ var PLAYER_INFO = function() {
 		$(".player_info_bottom").append($obj);
 	}
 	
+	function _removePlayer(id) {
+		$("#"+id).remove();
+	}
+	
 	function _updateScore(value, player) {
 		$("#"+player).children(":nth-child(3)").children(":nth-child(1)").text(value);
 	}
@@ -25,6 +29,9 @@ var PLAYER_INFO = function() {
 	return {
 		addPlayer : function(phone_number, color) {
 			_addPlayer(phone_number, color);
+		},
+		removePlayer : function(id) {
+			_removePlayer(id);
 		},
 		updateScore : function(value, player) {
 			_updateScore(value, player);

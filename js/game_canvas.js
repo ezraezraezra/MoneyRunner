@@ -74,17 +74,6 @@ var GAME_CANVAS = function() {
 			processing.colorMode(processing.RGB);
 			processing.background(3,3,3);
 			
-			/*
-			 * START TESTING ONLY
-			 */
-			player_array.push(new player(5,9,"19498423052", player_colors[0]));
-			PLAYER_INFO.addPlayer("19498423052",player_colors[0]);
-			
-			player_array.push(new player(5,11,"19496359409", player_colors[1]));
-			PLAYER_INFO.addPlayer("19496359409",player_colors[1]);
-			/*
-			 * END TESTING ONLY
-			 */
 			img = new Array();
 			img['normal'] = processing.loadImage("assets/player.png");
 			img['right'] = processing.loadImage("assets/player_right.png");
@@ -287,6 +276,24 @@ var GAME_CANVAS = function() {
 	}
 	
 	return {
+		addPlayer : function(phone_number, mod_number) {
+			var color_index = mod_number % player_colors.length;
+			var y = Math.floor(Math.random() * (11 - 8 + 1) + 8);
+			player_array.push(new player(5,y,phone_number, player_colors[color_index]));
+			PLAYER_INFO.addPlayer(phone_number,player_colors[color_index]);
+		},
+		removePlayer : function(phone_number) {
+			var player_index = -1;
+			for(var x = 0; x < player_array.length; x++) {
+				if (player_array[x].phone_number == phone_number) {
+					player_index = x;
+				}
+			}
+			if(player_index != -1) {
+				PLAYER_INFO.removePlayer(player_array[player_index].id);
+				player_array.splice(player_index, 1);
+			}
+		},
 		movePlayer : function(position, player_phone_number) {
 			var player_number = -1;
 			for(var x = 0; x < player_array.length; x++) {
